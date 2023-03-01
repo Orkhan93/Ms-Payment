@@ -1,0 +1,25 @@
+databaseChangelog:
+  - changeSet:
+      id: 20230216
+      author: Orkhan Mustafayev
+      changes:
+        - createTable:
+            tableName: payments
+            column:
+              - column:
+                  name: id
+                  type: bigint
+                  autoincrement: true
+                  constrains:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: amount
+                  type: numeric(16,2)
+                  constrains:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: text
