@@ -9,7 +9,7 @@ databaseChangelog:
               - column:
                   name: id
                   type: bigint
-                  autoincrement: true
+                  autoIncrement: true
                   constrains:
                     primaryKey: true
                     nullable: false
