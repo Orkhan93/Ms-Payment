@@ -1,6 +1,8 @@
 package com.example.mspayment.controller;
 
+import com.example.mspayment.criteria.PaymentCriteria;
 import com.example.mspayment.request.PaymentRequest;
+import com.example.mspayment.response.PageablePaymentResponse;
 import com.example.mspayment.response.PaymentResponse;
 import com.example.mspayment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +30,10 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping
-    public List<PaymentResponse> getAllPayments() {
-        return paymentService.getAllPayments();
+    public PageablePaymentResponse getAllPayments(@RequestParam int page,
+                                                  @RequestParam int count,
+                                                  PaymentCriteria paymentCriteria) {
+        return paymentService.getAllPayments(page, count, paymentCriteria);
     }
 
     @GetMapping("/{id}")

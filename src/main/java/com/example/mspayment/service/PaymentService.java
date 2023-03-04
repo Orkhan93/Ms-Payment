@@ -1,6 +1,7 @@
 package com.example.mspayment.service;
 
 import com.example.mspayment.client.CountryClient;
+import com.example.mspayment.criteria.PaymentCriteria;
 import com.example.mspayment.domain.Payment;
 import com.example.mspayment.enums.ErrorCode;
 import com.example.mspayment.error.ErrorMessage;
@@ -8,18 +9,22 @@ import com.example.mspayment.exception.ServiceException;
 import com.example.mspayment.mapper.PaymentMapper;
 import com.example.mspayment.repository.PaymentRepository;
 import com.example.mspayment.request.PaymentRequest;
+import com.example.mspayment.response.PageablePaymentResponse;
 import com.example.mspayment.response.PaymentResponse;
+import com.example.mspayment.specification.PaymentSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.mspayment.constant.ExceptionConstants.COUNTRY_NOT_FOUND_CODE;
 import static com.example.mspayment.constant.ExceptionConstants.COUNTRY_NOT_FOUND_MESSAGE;
 import static com.example.mspayment.mapper.PaymentMapper.domainToResponse;
 import static com.example.mspayment.mapper.PaymentMapper.requestToDomain;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Slf4j
 @Service
@@ -50,10 +55,28 @@ public class PaymentService {
         log.info("updatePayment success id : {}", id);
     }
 
-    public List<PaymentResponse> getAllPayments() {
-        return paymentRepository.findAll()
+//    public List<PaymentResponse> getAllPayments() {
+//        return paymentRepository.findAll()
+//                .stream()
+//                .map(PaymentMapper::domainToResponse).collect(Collectors.toList());
+//    }
+
+    public PageablePaymentResponse getAllPayments(int page, int count, PaymentCriteria paymentCriteria) {
+        log.info("getAllPayments start");
+        var pageable =
+                PageRequest.of(page, count, Sort.by(DESC, "id"));
+        var pageablePayments =
+                paymentRepository.findAll(new PaymentSpecification(paymentCriteria), pageable);
+        var payments = pageablePayments.getContent()
                 .stream()
                 .map(PaymentMapper::domainToResponse).collect(Collectors.toList());
+        log.info("getAllPayments success");
+        return PageablePaymentResponse.builder()
+                .paymentResponseList(payments)
+                .hasNextPage(pageablePayments.hasNext())
+                .totalElements(pageablePayments.getTotalElements())
+                .totalPage(pageablePayments.getTotalPages())
+                .build();
     }
 
     public PaymentResponse getPaymentById(Long id) {
