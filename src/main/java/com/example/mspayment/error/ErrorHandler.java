@@ -1,6 +1,5 @@
 package com.example.mspayment.error;
 
-import com.example.mspayment.constant.ExceptionConstants;
 import com.example.mspayment.enums.ErrorCode;
 import com.example.mspayment.exception.NotFoundException;
 import com.example.mspayment.exception.ServiceException;

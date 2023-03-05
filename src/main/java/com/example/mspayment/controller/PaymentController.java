@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -30,7 +30,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping
-    public PageablePaymentResponse getAllPayments(@RequestParam int page,
+    public PageablePaymentResponse getAllPayments(@Valid @RequestParam int page,
                                                   @RequestParam int count,
                                                   PaymentCriteria paymentCriteria) {
         return paymentService.getAllPayments(page, count, paymentCriteria);
@@ -38,23 +38,23 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public PaymentResponse getPaymentById(@PathVariable Long id) {
+    public PaymentResponse getPaymentById(@Valid @PathVariable Long id) {
         return paymentService.getPaymentById(id);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void savePayment(@RequestBody PaymentRequest request) {
+    public void savePayment(@Valid @RequestBody PaymentRequest request) {
         paymentService.savePayment(request);
     }
 
     @PutMapping("/{id}")
-    public void updatePayment(@PathVariable Long id, @RequestBody PaymentRequest request) {
+    public void updatePayment(@Valid @PathVariable Long id, @RequestBody PaymentRequest request) {
         paymentService.updatePayment(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePayment(@PathVariable Long id) {
+    public void deletePayment(@Valid @PathVariable Long id) {
         paymentService.deletePayment(id);
     }
 
